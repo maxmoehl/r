@@ -59,4 +59,4 @@ Depending on your use-case there can be a lot of repetition. I'm planning to add
 makes building the URL additive, so the `gh` node could contain only the base path and the `cf`
 node would only contain `/cloudfoundry`.
 
-For most cases the templating should be strong enough too avoid repititon.
+For most cases the templating should be strong enough to avoid repititon.
