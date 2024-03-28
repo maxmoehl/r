@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -88,12 +89,15 @@ func main() {
 }
 
 func Main() error {
-	if len(os.Args) < 2 {
+	configPath := filepath.Join(os.Getenv("HOME"), ".config/r/config.json")
+	if len(os.Args) == 2 {
+		configPath = os.Args[1]
+	} else if len(os.Args) > 2 {
 		slog.Error("usage: r <config.json>")
-		return fmt.Errorf("no config file provided")
+		return fmt.Errorf("unknown arguments")
 	}
 
-	cf, err := os.Open(os.Args[1])
+	cf, err := os.Open(configPath)
 	if err != nil {
 		return err
 	}
@@ -104,7 +108,12 @@ func Main() error {
 		return fmt.Errorf("parse config: %w", err)
 	}
 
-	err = http.ListenAndServe(":8080", n)
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "7091"
+	}
+
+	err = http.ListenAndServe(":"+port, n)
 	if err != nil {
 		return fmt.Errorf("listen: %w", err)
 	}
